@@ -13,6 +13,9 @@ exports.sendNotification = functions.firestore.document("Users/{user_id}/Notific
 
     return admin.firestore().collection("Users").doc(user_id).collection("Notifications").doc(notification_id).get().then(queryResult => {
           const from_user_id = queryResult.data().from;
+          const from_user_name = queryResult.data().name;
+		  const activityName = queryResult.data().activityNameAction;
+		  
           const to_user_id = queryResult.data().to;
           const notification_message = queryResult.data().message;
 
@@ -27,10 +30,19 @@ exports.sendNotification = functions.firestore.document("Users/{user_id}/Notific
 
                 const payload = {
                     notification: {
-                          title: "Notification From: " + from_name,
+                          title: "Notification From " + from_user_name,
                           body: notification_message,
-                          icon: "default"
-                    }
+                          icon: "default", 
+                          click_action: activityName
+                    },
+                    data: {
+                      userID: user_id,
+                      activityType: queryResult.data().activityType,
+  					  apiKey: queryResult.data().apiKey,
+    				  sessionId: queryResult.data().sessionId,
+    				  tokenPublisher: queryResult.data().tokenPublisher,
+    				  tokenSubscriber: queryResult.data().tokenSubscriber
+ 					}
                 };
 
                 return admin.messaging().sendToTopic(to_user_id, payload).then(result =>{

@@ -41,7 +41,8 @@ exports.sendNotification = functions.firestore.document("Users/{user_id}/Notific
   					  apiKey: queryResult.data().apiKey,
     				  sessionId: queryResult.data().sessionId,
     				  tokenPublisher: queryResult.data().tokenPublisher,
-    				  tokenSubscriber: queryResult.data().tokenSubscriber
+    				  tokenSubscriber: queryResult.data().tokenSubscriber,
+    				  tokenModerator: queryResult.data().tokenModerator
  					}
                 };
 
